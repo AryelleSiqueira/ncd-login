@@ -8,9 +8,10 @@ defineProps<{
 </script>
 
 <template>
-  <button class="btn p-2 shadow-sm"
-          :type="type"
-          :class="styleClass"
+  <button
+      class="btn p-2 shadow-sm"
+      :type="type"
+      :class="styleClass"
   >
     {{text}}
   </button>

@@ -6,6 +6,7 @@ const props = withDefaults(defineProps<{
   id: string
   label: string
   type: string
+  modelValue: string
   placeholder?: string
   required?: boolean
   pattern?: RegExp
@@ -15,27 +16,27 @@ const props = withDefaults(defineProps<{
   required: false,
 });
 
-let value = '';
-
 const isValid = ref(true);
 
 function validate() {
   if (props.pattern) {
-    isValid.value = !value || props.pattern.test(value);
+    isValid.value = !props.modelValue || props.pattern.test(props.modelValue);
   }
 }
 </script>
 
 <template>
   <div class="form-floating">
-    <input class="form-control shadow border-0"
-           v-model="value"
-           @focusout="validate"
-           :class="{'is-invalid': !isValid}"
-           :id="id"
-           :type="type"
-           :placeholder="placeholder"
-           :required="required"
+    <input
+        class="form-control shadow border-0"
+        :class="{'is-invalid': !isValid}"
+        @focusout="validate"
+        :value="modelValue"
+        @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
+        :id="id"
+        :type="type"
+        :placeholder="placeholder"
+        :required="required"
     >
     <label :for="id">{{label}}</label>
 
