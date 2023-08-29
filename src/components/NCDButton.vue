@@ -4,6 +4,7 @@ defineProps<{
   text: string
   type?: "button" | "submit" | "reset"
   styleClass?: "btn-pink" | "btn-outline-pink"
+  disabled?: boolean
 }>();
 </script>
 
@@ -12,6 +13,7 @@ defineProps<{
       class="btn p-2 shadow-sm"
       :type="type"
       :class="styleClass"
+      :disabled="disabled"
   >
     {{text}}
   </button>

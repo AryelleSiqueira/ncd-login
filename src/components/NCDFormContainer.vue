@@ -1,28 +1,27 @@
 <template>
-  <div class="container d-flex flex-column justify-content-center rounded shadow">
-    <img src="../assets/NCD.png" alt="ncd-logo">
-    <form class="d-flex flex-column" @submit.stop="$emit('submit', $event)">
+  <form class="d-flex flex-column justify-content-center align-items-center rounded shadow w-100 h-100 p-0 m-0">
+    <div class="img-container">
+      <img class="img-fluid w-100 h-100" src="../assets/NCD.svg" alt="ncd-logo">
+    </div>
 
-      <slot name="content"></slot>
-
-    </form>
-  </div>
+    <slot name="content"></slot>
+  </form>
 </template>
 
 <style lang="scss" scoped>
-.container {
+form {
   background-color: #f9f9f9ff;
-  margin: 0;
-  height: 100%;
-  width: 100%;
-  min-width: 35rem;
-  min-height: fit-content;
-  padding: 0 50px;
+  gap: 20px;
+  box-sizing: border-box;
+  min-width: 350px;
 
-  img {
-    width: 200px;
-    margin: 50px 0;
-    align-self: center;
+  .img-container {
+    width: 50%;
+    height: auto;
+
+    @media (min-width: 500px) {
+      width: 40%;
+    }
   }
 }
 </style>

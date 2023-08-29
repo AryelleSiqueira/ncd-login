@@ -1,9 +1,10 @@
 import { createStore } from "vuex";
+import User from "../types/User.ts";
 
 export interface IState {
     isAuthenticated: boolean;
     loggedUserId: number;
-    users: any[];
+    users: User[];
 }
 
 export default createStore({
@@ -14,8 +15,8 @@ export default createStore({
     },
     getters: {
         isAuthenticated: (state: IState) => state.isAuthenticated,
-        userByEmail: (state: IState) => (email: string) => state.users.find((user: any) => user.email === email),
-        loggedUser: (state: IState) => state.users.find((user: any) => user.id === state.loggedUserId),
+        userByEmail: (state: IState) => (email: string) => state.users.find((user: User) => user.email === email),
+        loggedUser: (state: IState) => state.users.find((user: User) => user.id === state.loggedUserId),
         users: (state: IState) => state.users,
     },
     mutations: {
@@ -27,20 +28,20 @@ export default createStore({
             state.loggedUserId = loggedUserId;
             localStorage.setItem("loggedUserId", loggedUserId.toString());
         },
-        registerUser(state: IState, user: any) {
+        registerUser(state: IState, user: User) {
             user.id = Math.max(...state.users.map((user: any) => user.id), 0) + 1;
             state.users.push(user);
             localStorage.setItem("users", JSON.stringify(state.users));
         },
-        setUsers(state: IState, users: any[]) {
+        setUsers(state: IState, users: User[]) {
             state.users = users;
         },
     },
     actions: {
-        registerUser: ({ commit }: any, user: any) => {
+        registerUser: ({ commit }: any, user: User) => {
             commit("registerUser", user);
         },
-        login: ({ commit }: any, user: any) => {
+        login: ({ commit }: any, user: User) => {
             commit("setIsAuthenticated", true);
             commit("setLoggedUserId", user.id);
         },
@@ -54,7 +55,7 @@ export default createStore({
             const loggedUserId = localStorage.getItem("loggedUserId");
 
             if (users) commit("setUsers", JSON.parse(users));
-            if (isAuthenticated) commit("setIsAuthenticated", isAuthenticated);
+            if (isAuthenticated) commit("setIsAuthenticated", isAuthenticated === 'true');
             if (loggedUserId) commit("setLoggedUserId", Number(loggedUserId));
         }
     }

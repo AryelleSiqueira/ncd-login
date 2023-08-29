@@ -4,17 +4,21 @@ import App from './App.vue'
 import store from "./store";
 import router from "./router";
 
-router.beforeEach((to, from) => {
-    const isAuthenticated = store.getters.isAuthenticated;
-    console.log(isAuthenticated, to.name, from.name);
+router.beforeEach((to, from, next) => {
+    const isAuthenticated: boolean = store.getters.isAuthenticated;
 
-    if (!isAuthenticated && to.name !== 'LoginView' && to.name !== 'RegisterView') console.log("Não autenticado");
+    console.log(isAuthenticated, to.name, typeof isAuthenticated);
 
-    if (!isAuthenticated && to.name !== 'LoginView' && to.name !== 'RegisterView') return { name: 'LoginView' };
-    if (isAuthenticated && to.name!== 'LoggedView') return { name: 'LoggedView' };
+    if (!isAuthenticated && to.name !== 'LoginView' && to.name !== 'RegisterView') {
+        next({ name: 'LoginView' });
+    } else if (isAuthenticated && to.name !== 'LoggedView') {
+        next({ name: 'LoggedView' });
+    } else {
+        next();
+    }
 });
 
 createApp(App)
     .use(store)
     .use(router)
-    .mount('#app')
+    .mount('#app');

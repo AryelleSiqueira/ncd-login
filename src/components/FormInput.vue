@@ -16,11 +16,14 @@ const props = withDefaults(defineProps<{
   required: false,
 });
 
+const emit = defineEmits(['validated', 'update:modelValue']);
+
 const isValid = ref(true);
 
 function validate() {
   if (props.pattern) {
     isValid.value = !props.modelValue || props.pattern.test(props.modelValue);
+    emit('validated', isValid.value);
   }
 }
 </script>
@@ -29,7 +32,7 @@ function validate() {
   <div class="form-floating">
     <input
         class="form-control shadow border-0"
-        :class="{'is-invalid': !isValid}"
+        :class="{ 'is-invalid': !isValid }"
         @focusout="validate"
         :value="modelValue"
         @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"

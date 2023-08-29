@@ -1,3 +1,9 @@
-body {
-    min-width: 45rem;
+html, body, #app {
+    background-color: #e8d0e0;
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    min-width: fit-content !important;
+    min-height: fit-content !important;
 }

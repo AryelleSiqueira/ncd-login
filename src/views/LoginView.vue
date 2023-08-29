@@ -6,26 +6,24 @@ import NCDFormContainer from "../components/NCDFormContainer.vue";
 import FormInput from "../components/FormInput.vue";
 import NCDButton from "../components/NCDButton.vue";
 import { ref } from "vue";
-import {authenticate} from "../services/Auth.ts";
+import { authenticate } from "../services/Auth.ts";
 
 let email = ref('');
 let password = ref('');
 
-function login() {
-  authenticate(email.value, password.value)
-      .then(() => router.push('/'))
+async function login() {
+  await authenticate(email.value, password.value)
+      .then(() => router.push('/logged'))
       .catch(err => {
         password.value = "";
         alert(err);
       });
 }
-
 </script>
 
 <template>
-  <div id="login-view">
+  <div id="login-view" class="w-100 h-100 p-0 d-flex justify-content-center align-items-center">
     <NCDFormContainer class="form-container" @submit.prevent="login">
-
       <template #content>
         <FormInput
             class="form-input"
@@ -47,9 +45,7 @@ function login() {
             invalid-message="Senha deve conter ao menos 8 caracteres, uma letra maiúscula, uma minúscula, um número e um caractere especial!"
         />
 
-        <a href="#">Esqueci minha senha</a>
-
-        <div class="form-buttons">
+        <div class="form-buttons d-flex flex-column align-items-center w-100">
           <NCDButton type="submit" text="Fazer login" style-class="btn-pink" class="form-button"/>
 
           <router-link to="/register" custom v-slot="{ navigate }">
@@ -62,8 +58,8 @@ function login() {
             />
           </router-link>
         </div>
+        <a href="#">Esqueci minha senha</a>
       </template>
-
     </NCDFormContainer>
   </div>
 </template>
@@ -71,40 +67,37 @@ function login() {
 <style lang="scss" scoped>
 
 #login-view {
-  background-color: #e8d0e0;
-  height: 100vh;
-  width: 100vw;
-  min-height: 40rem;
-  min-width: 50rem;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
   .form-container {
-    width: 35rem;
-    height: fit-content;
+    max-width: 35rem;
+    height: 80% !important;
+    min-height: 600px !important;
+
+    @media (max-width: 700px) {
+      width: 95% !important;
+      height: 80% !important;
+    }
 
     a {
-      margin: 0 0 10px auto;
+      margin: 0 auto;
       color: #83164a;
+      text-align: center;
     }
 
     .form-input {
-      margin-bottom: 20px;
+      width: 80%;
+
+      @media (max-width: 600px) {
+        width: 90%;
+      }
     }
 
     .form-buttons {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      margin-top: 10px;
+      gap: 10px;
 
-      * {
-        width: 200px;
-        margin: 8px 0;
-      }
-      *:last-child {
-        margin-bottom: 50px;
+      button {
+        width: calc(50% - 70px);
+        min-width: 150px;
       }
     }
   }

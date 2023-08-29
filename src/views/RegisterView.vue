@@ -1,17 +1,16 @@
 <script setup lang="ts">
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 
 import FormInput from "../components/FormInput.vue";
 import NCDButton from "../components/NCDButton.vue";
 import NCDFormContainer from "../components/NCDFormContainer.vue";
 
 import router from "../router";
-import {register} from "../services/Auth.ts";
+import { register } from "../services/Auth.ts";
 
 let name = '';
-let email = '';
-let password = '';
-
+const email = ref('');
+const password = ref('');
 const cpf = ref('');
 
 watch(cpf, () => {
@@ -22,21 +21,33 @@ watch(cpf, () => {
   }
 });
 
+const fieldsValidation = ref([] as boolean[]);
+
+const isFormValid = computed((): boolean => fieldsValidation.value.every(value => value));
+
+function handleValidated(i: number, value: boolean) {
+  fieldsValidation.value[i] = value;
+}
+
 async function registerUser() {
-  await register({
-    name,
-    email,
-    password,
-    cpf: cpf.value,
-  }).then(() => router.push('/login'))
-      .catch(err => {
-        alert(err.message);
-      });
+  if (isFormValid.value) {
+    await register({
+      name,
+      email: email.value,
+      password: password.value,
+      cpf: cpf.value,
+    }).then(() => router.push('/login'))
+        .catch(err => {
+          alert(err.message);
+        });
+  } else {
+    alert("Preencha todos os campos corretamente!");
+  }
 }
 </script>
 
 <template>
-  <div id="register-view">
+  <div id="register-view" class="w-100 h-100 p-0 d-flex justify-content-center align-items-center">
 
     <NCDFormContainer class="form-container" @submit.prevent="registerUser">
       <template #content>
@@ -49,6 +60,7 @@ async function registerUser() {
             :required=true
         />
         <FormInput
+            @validated="handleValidated(1, $event)"
             class="form-input"
             v-model="email"
             id="register-email"
@@ -59,6 +71,7 @@ async function registerUser() {
             invalid-message="Email inválido!"
         />
         <FormInput
+            @validated="handleValidated(2, $event)"
             class="form-input"
             v-model="cpf"
             id="register-cpf"
@@ -68,6 +81,7 @@ async function registerUser() {
             :pattern="new RegExp('^[0-9]{3}.[0-9]{3}.[0-9]{3}-[0-9]{2}$')"
             invalid-message="CPF inválido!"/>
         <FormInput
+            @validated="handleValidated(3, $event)"
             class="form-input"
             v-model="password"
             id="login-password"
@@ -90,32 +104,31 @@ async function registerUser() {
 <style lang="scss" scoped>
 
 #register-view {
-  background-color: #e8d0e0;
-  height: 100vh;
-  width: 100vw;
-  min-height: 45rem;
-  min-width: 50rem;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
   .form-container {
-    width: 35rem;
-    height: fit-content;
+    max-width: 35rem;
+    height: 95% !important;
+    min-height: 650px !important;
+
+    @media (max-width: 700px) {
+      width: 95% !important;
+      height: 90% !important;
+    }
 
     .form-input {
-      margin: 15px 0;
+      width: 80%;
+
+      @media (max-width: 700px) {
+        width: 90%;
+      }
     }
 
     .link {
-      margin: 0 auto 50px;
       color: #83164a;
     }
 
     .form-button {
-      width: 200px;
-      margin: 25px auto 8px;
+      width: calc(50% - 60px) !important;
+      min-width: 150px;
     }
   }
 }
