@@ -1,62 +1,42 @@
-import { createStore } from "vuex";
+import { defineStore } from "pinia";
 import User from "../types/User.ts";
 
 export interface IState {
-    isAuthenticated: boolean;
     loggedUserId: number;
     users: User[];
 }
 
-export default createStore({
-    state: {
+const useStore = defineStore('authStore', {
+    state: (): IState  => ({
         users: [],
-        isAuthenticated: false,
         loggedUserId: -1
-    },
+    }),
     getters: {
-        isAuthenticated: (state: IState) => state.isAuthenticated,
-        userByEmail: (state: IState) => (email: string) => state.users.find((user: User) => user.email === email),
+        isAuthenticated: (state: IState) => state.loggedUserId !== -1,
         loggedUser: (state: IState) => state.users.find((user: User) => user.id === state.loggedUserId),
-        users: (state: IState) => state.users,
-    },
-    mutations: {
-        setIsAuthenticated(state: IState, isAuthenticated: boolean) {
-            state.isAuthenticated = isAuthenticated;
-            localStorage.setItem("isAuthenticated", isAuthenticated.toString());
-        },
-        setLoggedUserId(state: IState, loggedUserId: number) {
-            state.loggedUserId = loggedUserId;
-            localStorage.setItem("loggedUserId", loggedUserId.toString());
-        },
-        registerUser(state: IState, user: User) {
-            user.id = Math.max(...state.users.map((user: any) => user.id), 0) + 1;
-            state.users.push(user);
-            localStorage.setItem("users", JSON.stringify(state.users));
-        },
-        setUsers(state: IState, users: User[]) {
-            state.users = users;
-        },
     },
     actions: {
-        registerUser: ({ commit }: any, user: User) => {
-            commit("registerUser", user);
+        registerUser(user: User) {
+            user.id = Math.max(...this.users.map((user: any) => user.id), 0) + 1;
+            this.users.push(user);
+            localStorage.setItem("users", JSON.stringify(this.users));
         },
-        login: ({ commit }: any, user: User) => {
-            commit("setIsAuthenticated", true);
-            commit("setLoggedUserId", user.id);
+        login(user: User) {
+            this.loggedUserId = user.id ? user.id : -1;
+            localStorage.setItem("loggedUserId", String(this.loggedUserId));
         },
-        logout: ({ commit }: any) => {
-            commit("setIsAuthenticated", false);
-            commit("setLoggedUserId", -1);
+        logout() {
+            this.loggedUserId = -1;
+            localStorage.setItem("loggedUserId", String(this.loggedUserId));
         },
-        load: ({ commit }: any) => {
+        load() {
             const users = localStorage.getItem("users");
-            const isAuthenticated = localStorage.getItem("isAuthenticated");
             const loggedUserId = localStorage.getItem("loggedUserId");
 
-            if (users) commit("setUsers", JSON.parse(users));
-            if (isAuthenticated) commit("setIsAuthenticated", isAuthenticated === 'true');
-            if (loggedUserId) commit("setLoggedUserId", Number(loggedUserId));
+            if (users) this.users = JSON.parse(users);
+            if (loggedUserId) this.loggedUserId = Number(JSON.parse(loggedUserId));
         }
     }
 });
+
+export default useStore;

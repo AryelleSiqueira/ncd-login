@@ -1,10 +1,12 @@
 <script setup lang="ts">
 
 import {onBeforeMount} from "vue";
-import store from "./store";
+import useStore from "./store";
+
+const store = useStore();
 
 onBeforeMount(() => {
-  store.dispatch('load');
+  store.load();
 });
 </script>
 

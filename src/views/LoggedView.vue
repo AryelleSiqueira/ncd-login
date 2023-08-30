@@ -1,15 +1,17 @@
 <script setup lang="ts">
 
-import store from "../store";
+import useStore from "../store";
 import router from "../router";
 import { computed } from "vue";
 import NCDButton from "../components/NCDButton.vue";
 import User from "../types/User.ts";
 
-const loggedUser = computed((): User => store.getters.loggedUser);
+const store = useStore();
+
+const loggedUser = computed((): User | undefined => store.loggedUser);
 
 async function logout() {
-  await store.dispatch('logout');
+  store.logout();
   await router.push({ name: "LoginView" });
 }
 </script>
