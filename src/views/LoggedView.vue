@@ -24,6 +24,6 @@ async function logout() {
     <p>Email: {{loggedUser?.email}} </p>
     <p>CPF: {{loggedUser?.cpf}} </p>
 
-    <NCDButton text="Logout" style-class="btn-outline-pink" @click="logout"/>
+    <NCDButton text="Logout" style-class="btn-pink" @click="logout"/>
   </div>
 </template>

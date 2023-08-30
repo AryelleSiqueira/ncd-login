@@ -49,7 +49,7 @@ async function registerUser() {
 <template>
   <div id="register-view" class="w-100 h-100 p-0 d-flex justify-content-center align-items-center">
 
-    <NCDFormContainer class="form-container" @submit.prevent="registerUser">
+    <NCDFormContainer class="form" @submit.prevent="registerUser">
       <template #content>
         <FormInput
             class="form-input"
@@ -102,34 +102,31 @@ async function registerUser() {
 </template>
 
 <style lang="scss" scoped>
+.form {
+  max-width: 35rem !important;
+  height: fit-content !important;
 
-#register-view {
-  .form-container {
-    max-width: 35rem;
-    height: 95% !important;
-    min-height: 650px !important;
+  @media (max-width: 700px) {
+    width: 95% !important;
+    min-width: fit-content !important;
+  }
 
-    @media (max-width: 700px) {
-      width: 95% !important;
-      height: 90% !important;
+  .link {
+    color: #83164a;
+  }
+
+  .form-input {
+    width: calc(100% - 60px) !important;
+
+    @media (max-width: 600px) {
+      width: 90%;
+      min-width: 250px;
     }
+  }
 
-    .form-input {
-      width: 80%;
-
-      @media (max-width: 700px) {
-        width: 90%;
-      }
-    }
-
-    .link {
-      color: #83164a;
-    }
-
-    .form-button {
-      width: calc(50% - 60px) !important;
-      min-width: 150px;
-    }
+  .form-button {
+    width: calc(50% - 60px);
+    min-width: 150px;
   }
 }
 </style>

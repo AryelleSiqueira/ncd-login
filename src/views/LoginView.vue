@@ -16,14 +16,14 @@ async function login() {
       .then(() => router.push('/logged'))
       .catch(err => {
         password.value = "";
-        alert(err);
+        alert(err.message);
       });
 }
 </script>
 
 <template>
   <div id="login-view" class="w-100 h-100 p-0 d-flex justify-content-center align-items-center">
-    <NCDFormContainer class="form-container" @submit.prevent="login">
+    <NCDFormContainer class="form" @submit.prevent="login">
       <template #content>
         <FormInput
             class="form-input"
@@ -67,14 +67,13 @@ async function login() {
 <style lang="scss" scoped>
 
 #login-view {
-  .form-container {
+  .form {
     max-width: 35rem;
-    height: 80% !important;
-    min-height: 600px !important;
+    height: fit-content !important;
 
     @media (max-width: 700px) {
       width: 95% !important;
-      height: 80% !important;
+      min-width: fit-content !important;
     }
 
     a {
@@ -84,19 +83,21 @@ async function login() {
     }
 
     .form-input {
-      width: 80%;
+      width: calc(100% - 60px) !important;
 
       @media (max-width: 600px) {
         width: 90%;
+        min-width: 250px;
       }
     }
 
     .form-buttons {
-      margin-top: 10px;
       gap: 10px;
+      box-sizing: border-box;
+      padding-top: 20px;
 
       button {
-        width: calc(50% - 70px);
+        width: calc(50% - 100px);
         min-width: 150px;
       }
     }
