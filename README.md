@@ -7,7 +7,10 @@ This is a simple login and register web app for NCD. It is built using [Vue 3](h
 npm install
 ```
 ```bash
-npm run server
+npm run build
+```
+```bash
+npm run preview
 ```
 
 ### Features
